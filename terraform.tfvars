@@ -1,4 +1,5 @@
 subscription_id                      = "ef0a94be-5750-4ef8-944b-1bbc0cdda800"
+tenant_id                            = "fe6c41e5-a3e4-4d16-82df-1b33029102eb"
 rsg_name                             = "rg-poc-test-001"
 location                             = "chilecentral"
 entity                               = "dls"
