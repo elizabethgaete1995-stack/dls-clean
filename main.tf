@@ -19,6 +19,12 @@ provider "azurerm" {
 
 data "azurerm_client_config" "current" {}
 
+resource "azurerm_role_assignment" "dls_blob_data_owner" {
+  scope                = azurerm_storage_account.sta.id
+  role_definition_name = "Storage Blob Data Owner"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
 data "azurerm_resource_group" "rsg" {
   name = var.rsg_name
 }
@@ -105,9 +111,11 @@ resource "azurerm_storage_account" "sta" {
 // Filesystems (containers) in ADLS Gen2
 ########################################################################
 resource "azurerm_storage_data_lake_gen2_filesystem" "datalake2fs" {
-  # Create one filesystem per name provided.
-  for_each = toset(var.datalake_filesystem_name)
-
+  for_each           = toset(var.datalake_filesystem_name)
   name               = each.value
   storage_account_id = azurerm_storage_account.sta.id
+
+  depends_on = [
+    azurerm_role_assignment.dls_blob_data_owner
+  ]
 }
